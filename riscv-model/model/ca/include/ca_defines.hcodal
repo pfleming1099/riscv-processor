@@ -1,0 +1,199 @@
+/**
+ * Codasip s.r.o.
+ *
+ * CONFIDENTIAL
+ *
+ * Copyright 2022 Codasip s.r.o.
+ *
+ * All Rights Reserved.
+ *
+ * NOTICE: All information contained in this file, is and shall remain the property of
+ * Codasip s.r.o. and its suppliers, if any.
+ *
+ * The intellectual and technical concepts contained herein are confidential and proprietary to
+ * Codasip s.r.o. and are protected by trade secret and copyright law.  In addition, elements of the
+ * technical concepts may be patent pending.
+ *
+ * This file is part of the Codasip Studio product. No part of the Studio product, including this
+ * file, may be use, copied, modified, or distributed except in accordance with the terms contained
+ * in Codasip license agreement under which you obtained this file.
+ *
+ *  \file   ca_defines.hcodal
+ *  \author Codasip
+ *  \date   09.02.2022
+ *  \brief  cycle accurate model
+ */
+
+
+#ifndef CA_DEFINES_HCODAL
+#define CA_DEFINES_HCODAL
+
+#include "config.hcodal"
+
+// -------------------------------------------------------------------------------------------------
+// Signal size
+// -------------------------------------------------------------------------------------------------
+
+#define ALUOP_W        bitsizeof(enum aluop)
+#define REGWRITE_W     bitsizeof(enum regwrite)
+#define SRC2_W         bitsizeof(enum src2)
+#define HALT_W         bitsizeof(enum halt)
+#define RFF1_W         bitsizeof(enum rff1_sel)
+#define RFF2_W         bitsizeof(enum rff2_sel)
+#define FWDA_W         bitsizeof(enum fwdA_sel)
+#define FWDB_W         bitsizeof(enum fwdB_sel)
+#define SRC1_W         bitsizeof(enum src1)
+#define IMMTYPE_W      bitsizeof(enum imm_xtype)
+#define BRANCHOP_W     bitsizeof(enum branchop)
+#define RFWT_W         bitsizeof(enum rfwt_sel)
+#define BRADD_W        bitsizeof(enum bradd_sel)
+#define MEMOPS_W       bitsizeof(enum mem_ops)
+
+// -------------------------------------------------------------------------------------------------
+// Enumerations
+// -------------------------------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------------------------------
+// IF stage
+// -------------------------------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------------------------------
+// ID stage
+// -------------------------------------------------------------------------------------------------
+enum rff1_sel
+{
+    RFF1_SELID,
+    RFF1_SELWB,
+};
+
+enum rff2_sel
+{
+    RFF2_SELID,
+    RFF2_SELWB,
+};
+
+enum imm_xtype
+{
+    IMM_NONE,
+    IMM_ITYPE,
+    IMM_BTYPE,
+    IMM_JTYPE,
+    IMM_UTYPE,
+    IMM_STYPE,
+};
+
+enum branchop
+{
+    BRANCH_FALSE,       //never branch
+    BRANCH_TRUE,        //always branch
+    BRANCH_COND_TRUE,   //branch alu 0
+    BRANCH_COND_FALSE,  //branch alu not 0
+};
+
+// -------------------------------------------------------------------------------------------------
+// EX stage
+// -------------------------------------------------------------------------------------------------
+
+// ALU function codes
+enum aluop
+{
+    ALU_NOP,
+    ALU_ADD,
+    ALU_AND,
+    ALU_SUB,
+    ALU_OR,
+    ALU_XOR,
+    ALU_SLT,
+    ALU_SLTU,
+    ALU_SLL,
+    ALU_SRL,
+    ALU_SRA,
+    ALU_ENC,
+    ALU_DEC
+};
+
+//ALU source 1 multiplexor
+enum src1
+{
+    ALU1_REG,
+    ALU1_ZERO,
+    ALU1_PC,
+};
+
+enum regwrite
+{
+    WE_FALSE,
+    WE_TRUE,
+};
+
+enum src2
+{
+    ALU2_REG,
+    ALU2_IMM,
+};
+
+enum halt
+{
+    HALT_NOHALT,
+    HALT_HALT,
+};
+
+//PHASE 6
+enum fwdA_sel
+{
+    FWDA_EXREG1,
+    FWDA_MERD,
+    FWDA_WBRD,
+};
+
+enum fwdB_sel
+{
+    FWDB_EXREG2,
+    FWDB_MERD,
+    FWDB_WBRD,
+};
+
+//EX multiplexor
+enum bradd_sel
+{
+    BRADD_ADDR, //all branch and jal
+    BRADD_ALU,  //jalr
+};
+
+
+// -------------------------------------------------------------------------------------------------
+// ME stage
+// -------------------------------------------------------------------------------------------------
+
+enum mem_ops
+{
+    MEM_NOP,
+    MEM_LB,
+    MEM_LBU,
+    MEM_LH,
+    MEM_LHU,
+    MEM_LW,
+    MEM_SB,
+    MEM_SH,
+    MEM_SW,
+};
+
+// -------------------------------------------------------------------------------------------------
+// WB stage
+// -------------------------------------------------------------------------------------------------
+
+//WB multiplexor
+enum rfwt_sel
+{
+    RFWT_ALU,   //selects output of alu
+    RFWT_PC,    //selects PC+4 to write to reg file -- jal and jalr
+    RFWT_MEM,   //selects read memory value -- load instr
+};
+// -------------------------------------------------------------------------------------------------
+// Auxiliary definitions
+// -------------------------------------------------------------------------------------------------
+
+#define DONT_CARE           0
+#define NOP_INSTRUCTION     ITYPE_ADDI
+#endif // CA_DEFINES_HCODAL
+
